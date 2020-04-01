@@ -108,17 +108,34 @@ namespace Infinum.ZanP.Infrastructure.Services
                 // chech if the contact doesn't already exist.
                 if(hasNameChanged || hasAddressChanged)
                 {
+                    // if the address has been changed, we should change its reference
+                    if(hasAddressChanged)
+                    {
+                        Address newAddress = GetExistingAddress(p_toUpdate.Address.Street, p_toUpdate.Address.HouseNumber, p_toUpdate.Address.ZIP, p_toUpdate.Address.City, p_toUpdate.Address.Country.Id);
+                        
+                        if(newAddress == null)
+                        {
+                            Country updatedCountry = await m_unitOfWork.Countries.GetByIdAsync(p_toUpdate.Address.Country.Id);
+
+                            newAddress = new Address()
+                            {
+                                Street = p_toUpdate.Address.Street,
+                                HouseNumber = p_toUpdate.Address.HouseNumber,
+                                ZIP = p_toUpdate.Address.ZIP,
+                                City = p_toUpdate.Address.City,
+                                Country = updatedCountry
+                            };
+                            await m_unitOfWork.Addresses.AddAsync(newAddress);
+                        }
+                        contact.Address = newAddress;
+                    }
+
                     p_toUpdate.Address.Id = contact.Address.Id;
                     if(ContactExists(p_toUpdate, true))
                         throw new Exception("Contact with that name and address already exists.");
                 }
-
-                originalAddress.ZIP = p_toUpdate.Address.ZIP;
-                originalAddress.City = p_toUpdate.Address.City;
-                originalAddress.HouseNumber = p_toUpdate.Address.HouseNumber;
-                originalAddress.Street = p_toUpdate.Address.Street;
                 
-                Country updatedCountry = await m_unitOfWork.Countries.GetByIdAsync(p_toUpdate.Address.Country.Id);
+                
 
                 var originalNumbers = contact.TelephoneNumbers;
                 var updatedNumbers = p_toUpdate.TelephoneNumbers;
@@ -126,8 +143,6 @@ namespace Infinum.ZanP.Infrastructure.Services
                 m_unitOfWork.TelephoneNumbers.RemoveRange(originalNumbers);
                 
                 contact.TelephoneNumbers = updatedNumbers;
-                originalAddress.Country = updatedCountry;
-                contact.Address = originalAddress;
 
                 await m_unitOfWork.CommitAsync();
 
