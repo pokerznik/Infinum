@@ -1,0 +1,8 @@
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/bin/Debug/netstandard2.0/Infinum.ZanP.Core.deps.json
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/bin/Debug/netstandard2.0/Infinum.ZanP.Core.dll
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/bin/Debug/netstandard2.0/Infinum.ZanP.Core.pdb
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/obj/Debug/netstandard2.0/Infinum.ZanP.Core.csprojAssemblyReference.cache
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/obj/Debug/netstandard2.0/Infinum.ZanP.Core.AssemblyInfoInputs.cache
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/obj/Debug/netstandard2.0/Infinum.ZanP.Core.AssemblyInfo.cs
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/obj/Debug/netstandard2.0/Infinum.ZanP.Core.dll
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Core/obj/Debug/netstandard2.0/Infinum.ZanP.Core.pdb

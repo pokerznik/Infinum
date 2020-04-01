@@ -1,0 +1,19 @@
+.add-contact
+{
+    padding-bottom: 5%;
+}
+
+.form-row-button
+{
+    vertical-align: middle;
+}
+
+.dataTables_empty {
+    display: none;
+}
+
+.no-data-available {
+    text-align: center;
+}
+
+::ng-deep .odd{ display: none }

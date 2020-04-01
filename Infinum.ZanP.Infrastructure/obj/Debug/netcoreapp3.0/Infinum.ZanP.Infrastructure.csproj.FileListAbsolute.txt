@@ -1,0 +1,11 @@
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.csprojAssemblyReference.cache
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.AssemblyInfoInputs.cache
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.AssemblyInfo.cs
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/bin/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.deps.json
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/bin/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.dll
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/bin/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.pdb
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/bin/Debug/netcoreapp3.0/Infinum.ZanP.Core.dll
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/bin/Debug/netcoreapp3.0/Infinum.ZanP.Core.pdb
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.csproj.CopyComplete
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.dll
+/Users/zanpokerznik/Projects/Infinum.ZanP/Infinum.ZanP.Infrastructure/obj/Debug/netcoreapp3.0/Infinum.ZanP.Infrastructure.pdb

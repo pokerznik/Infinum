@@ -1,0 +1,120 @@
+<button class="btn btn-success" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="addContactCollapse"><i class="fas fa-user-plus"></i> Add</button>
+<p>
+</p>
+  <div class="add-contact" [ngbCollapse]="isCollapsed">
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="newContactForm" (ngSubmit)="contactFormSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label>Name</label>
+              <input type="text" formControlName="name" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+              <label >Date Of Birth</label>
+              <div class="input-group mb-3">
+                <input class="form-control" [minDate]="{year: 1900, month: 1, day: 1}" placeholder="yyyy-mm-dd" name="dp" formControlName="dateOfBirth" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-dark" (click)="d.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label>Street</label>
+              <input type="text" formControlName="street" class="form-control" placeholder="1234 Main St">
+            </div>
+            <div class="form-group col-md-4">
+              <label >House number</label>
+              <input type="text" formControlName="houseNumber" class="form-control">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City</label>
+              <input type="text" formControlName="city" class="form-control">
+            </div>
+            <div class="form-group col-md-2">
+              <label>ZIP</label>
+              <input type="text" formControlName="ZIP" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Country</label>
+              <select class="form-control" formControlName="country">
+                <option selected>Choose...</option>
+                <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
+              </select>
+            </div>
+          </div>
+          <h4>Telephone numbers</h4>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Country code</label>
+              <input type="text" formControlName="countryCode" class="form-control">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Area code</label>
+              <input type="text" formControlName="areaCode" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+              <label>Phone number</label>
+              <input type="text" formControlName="phoneNumber" class="form-control">
+            </div>
+          </div>
+          <div class="form-row" *ngFor="let phoneControl of phoneNumbersControlNames; let i = index">
+            <div class="form-group col-md-4">
+              <label>Country code</label>
+              <input type="text" class="form-control" formControlName="{{phoneControl}}_countryCode">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Area code</label>
+              <input type="text" formControlName="{{phoneControl}}_areaCode" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+              <label>Phone number</label>
+              <!--<input type="text" formControlName="{{phoneControl}}_phoneNumber" class="form-control">-->
+
+              <div class="input-group">
+                <input type="text" class="form-control" formControlName="{{phoneControl}}_phoneNumber">
+                <div class="input-group-append" (click)="removeNumber(phoneControl)">
+                  <span class="input-group-text"><i class="far fa-trash-alt"></i></span>
+                </div>
+              </div>
+
+            </div>
+          
+          </div>
+          <div class="form-group">  
+            <button type="button" class="btn btn-success" (click)="addPhoneLine()">Add number</button>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Save contact</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<table datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions" class="row-border hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Date of birth</th>
+        <th>Address</th>
+        <th>Telephone numbers</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contact of contacts">
+        <td> {{contact.id}} </td>
+        <td> {{contact.name}} </td>
+        <td> {{contact.dateOfBirth2String}} </td>
+        <td> {{contact.address2String}} </td>
+        <td> {{contact.telephoneNumbers2String}} </td>
+        <td><button class="btn btn-primary" [routerLink]="['/contacts/',contact.id]"><i class="fas fa-user-edit"></i></button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-primary" (click)="send()">Poslji</button>
