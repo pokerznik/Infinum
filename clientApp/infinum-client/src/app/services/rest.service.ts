@@ -32,6 +32,15 @@ export class RestService {
     );
   }
 
+  putRequest<T>(data, url) : Observable<T>{
+    return this.http
+    .put<T>(this.baseUrl + url, data )
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
   deleteRequest<T>(url) : Observable<T> {
     return this.http
     .delete<T>(this.baseUrl + url)

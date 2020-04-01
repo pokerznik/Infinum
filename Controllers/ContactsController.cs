@@ -96,6 +96,21 @@ namespace Infinum.ZanP.Controllers
             return await m_contactService.Create(p_envelope);
         }
     
+        [HttpPut()]
+        public async Task<Contact> Update([FromBody]Contact p_envelope)
+        {
+            if(p_envelope == null)
+                throw new Exception("Received model is not valid.");
+            
+            if(p_envelope.Address == null)
+                throw new Exception("Received address is not valid.");
+
+            if(string.IsNullOrEmpty(p_envelope.Name))
+                throw new Exception("Name of contact is empty.");
+
+            return await m_contactService.Update(p_envelope);
+        }
+        
         [HttpDelete("{p_contactId}")]
         public async Task Delete(int p_contactId)
         {

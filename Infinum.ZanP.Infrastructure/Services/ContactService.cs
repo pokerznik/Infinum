@@ -77,13 +77,16 @@ namespace Infinum.ZanP.Infrastructure.Services
                 throw new Exception("Contact cannot be updated because is not valid.");
 
             var contact = await m_unitOfWork.Contacts.GetByIdAsync(p_toUpdate.Id);
-            
-            contact.Name = p_toUpdate.Name;
-            contact.DateOfBirth = p_toUpdate.DateOfBirth;
-            await m_unitOfWork.CommitAsync();
 
-            return p_toUpdate;
-            
+            if(contact != null)
+            {
+                contact.Name = p_toUpdate.Name;
+                contact.DateOfBirth = p_toUpdate.DateOfBirth;
+                await m_unitOfWork.CommitAsync();
+
+                return p_toUpdate;
+            }
+            throw new Exception("Contact cannot be updated, because it does not exist.");
         }
 
         public async void Delete(int p_id)

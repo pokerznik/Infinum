@@ -13,13 +13,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DetailsComponent } from './components/details/details.component';
 import { EditComponent } from './components/edit/edit.component';
+import { ContactInputTemplateComponent } from './templates/contact-input-template/contact-input-template.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
     DetailsComponent,
-    EditComponent
+    EditComponent,
+    ContactInputTemplateComponent
   ],
   imports: [
     BrowserModule,

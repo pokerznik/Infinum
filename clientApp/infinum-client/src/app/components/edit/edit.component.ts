@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RestService } from 'src/app/services/rest.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ContactDetails } from 'src/app/models/contact-details';
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 @Component({
   selector: 'app-edit',
@@ -52,6 +53,16 @@ export class EditComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  updateContact($event)
+  {
+    $event.id = this.contact.id;
+    this.rest.putRequest<any>($event, "Contacts").subscribe(resp => {
+      this.dialog.success("Great!", "Contact has been updated successfully!");
+    }, error => {
+      this.dialog.error("Oh no!", error.Message);
+    });
   }
 
 }
