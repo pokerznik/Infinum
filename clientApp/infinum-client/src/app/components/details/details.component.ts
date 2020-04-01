@@ -4,6 +4,7 @@ import { RestService } from 'src/app/services/rest.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { ContactDetails } from 'src/app/models/contact-details';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-details',
@@ -34,10 +35,29 @@ export class DetailsComponent implements OnInit {
   constructor(
     private actRoute: ActivatedRoute,
     private rest: RestService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private contactService: ContactService
     ) 
   { 
     this.detailId = this.actRoute.snapshot.params.id;
+
+    this.contactService.contactDeleted.subscribe((id: number) => {
+      if(id == this.detailId)
+      {
+        this.dialog.error("Ahh, that sucks!", "Sorry, but someone has just deleted the record and it no longer exists. If it was is you is everything okay.");
+      }
+    });
+
+    this.contactService.contactUpdated.subscribe((updated: ContactDetails) => {
+      if(updated.id == this.detailId)
+      {
+        this.dialog.info("New stuf!!", "This contact has just been updated.");
+        this.contact = updated;
+      }
+      else{
+
+      }
+    });
 
     this.getContactDetails();
   }

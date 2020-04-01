@@ -7,6 +7,7 @@ import { TelephoneNumber } from 'src/app/models/telephone-number';
 import { RestService } from 'src/app/services/rest.service';
 import { NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import { DialogService } from 'src/app/services/dialog.service';
+import { ContactDetails } from 'src/app/models/contact-details';
 
 
 @Component({
@@ -34,12 +35,15 @@ export class MainComponent implements OnInit {
     private dialog: DialogService
     ) {
 
-    // VRŽI VEN
-    this.contactService.messageReceived.subscribe((msg: any) => {
-      console.log("received!::");
-      console.log(msg);
+    this.contactService.contactUpdated.subscribe((contact: ContactDetails) => {
+      this.refreshData();
+      this.dialog.info("Just a sec!", "Some contacts have changed. We have retrieved the new data with.");
     });
 
+    this.contactService.contactDeleted.subscribe((id: number) => {
+      this.refreshData();
+      this.dialog.info("Just a sec!", "Some contacts have changed. We have retrieved the new data.");
+    });
 
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -66,16 +70,13 @@ export class MainComponent implements OnInit {
 
   }
 
-
   ngOnInit() {
 
   }
 
-  // VRŽI VEN
-  send()
-  {
-    this.contactService.sendMessage("heheheh");
 
+  private refreshData()
+  {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.destroy();
     });
@@ -85,11 +86,11 @@ export class MainComponent implements OnInit {
 
   private getContacts()
   {
-    /*this.contactService.connectionEstablished.subscribe((contacts: Contact[]) => {
-      this.contacts = contacts;
-      this.dtTrigger.next();
-    });*/
-    this.rest.getRequest<any>("Contacts").subscribe(resp => {
+    let query = "";
+    if(this.searchQuery != "")
+      query = this.searchQuery;
+
+    this.rest.getRequest<any>("Contacts"+query).subscribe(resp => {
       this.contacts = resp.data;
       this.dtTrigger.next();
     });

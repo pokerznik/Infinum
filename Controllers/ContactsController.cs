@@ -114,17 +114,7 @@ namespace Infinum.ZanP.Controllers
         [HttpDelete("{p_contactId}")]
         public async Task Delete(int p_contactId)
         {
-            var contact = await m_unitOfWork.Contacts.GetByIdAsync(p_contactId);
-            
-            if(contact != null)
-            {
-                m_unitOfWork.Contacts.Remove(contact);
-                await m_unitOfWork.CommitAsync();
-            }
-            else
-            {
-                throw new Exception("Contact cannot be deleted because it does not exist.");
-            }
+            await m_contactService.Delete(p_contactId);
         }
     }
 }

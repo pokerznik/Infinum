@@ -7,28 +7,41 @@ using Infinum.ZanP.Infrastructure.Data;
 using Infinum.ZanP.Infrastructure.Services.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using Infinum.ZanP.Infrastructure.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Infinum.ZanP.Infrastructure.Services
 {
     public class ContactService: IContactService
     {
         private readonly IUnitOfWork m_unitOfWork;
+        private readonly ILiveUpdateService m_liveUpdateService;
 
-        public ContactService(IUnitOfWork p_unitOfWork)
+        public ContactService(IUnitOfWork p_unitOfWork, ILiveUpdateService p_liveUpdateService)
         {
             m_unitOfWork = p_unitOfWork;
+            m_liveUpdateService = p_liveUpdateService;
         }
 
-        private bool ContactExists(Contact p_contact)
+        private bool ContactExists(Contact p_contact, bool isUpdating=false)
         {
             IEnumerable<Contact> contactsAtAddress = m_unitOfWork.Contacts.Find(x => x.Address.Id == p_contact.Address.Id);
 
             if(contactsAtAddress != null && contactsAtAddress.Count() > 0)
             {
-                IEnumerable<string> names = contactsAtAddress.Select(x => x.Name.ToLower());
+                List<string> names = contactsAtAddress.Select(x => x.Name.ToLower()).ToList();
 
                 if(names.Contains(p_contact.Name.ToLower()))
                 {
+                    if(isUpdating)
+                    {
+                        if(names.Where(x => x == p_contact.Name.ToLower()).Count() > 1)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+
                     return true;
                 }
             }
@@ -67,7 +80,10 @@ namespace Infinum.ZanP.Infrastructure.Services
 
             await m_unitOfWork.Contacts.AddAsync(p_toCreate);
             await m_unitOfWork.CommitAsync();
-    
+
+            // send live update
+            await m_liveUpdateService.ContactUpdated(p_toCreate);
+
             return p_toCreate;     
         }
 
@@ -88,6 +104,15 @@ namespace Infinum.ZanP.Infrastructure.Services
                 Address originalAddress = await m_unitOfWork.Addresses.GetByIdAsync(contact.Address.Id);
                 bool hasAddressChanged = !(originalAddress.Equals(p_toUpdate.Address));
 
+                // we should ensure address and name uniqueness, so if name or address is changed, we should
+                // chech if the contact doesn't already exist.
+                if(hasNameChanged || hasAddressChanged)
+                {
+                    p_toUpdate.Address.Id = contact.Address.Id;
+                    if(ContactExists(p_toUpdate, true))
+                        throw new Exception("Contact with that name and address already exists.");
+                }
+
                 originalAddress.ZIP = p_toUpdate.Address.ZIP;
                 originalAddress.City = p_toUpdate.Address.City;
                 originalAddress.HouseNumber = p_toUpdate.Address.HouseNumber;
@@ -104,30 +129,37 @@ namespace Infinum.ZanP.Infrastructure.Services
                 originalAddress.Country = updatedCountry;
                 contact.Address = originalAddress;
 
-                // we should ensure address and name uniqueness, so if name or address is changed, we should
-                // chech if the contact doesn't already exist.
-                if(hasNameChanged || hasAddressChanged)
-                {
-                    if(ContactExists(contact))
-                        throw new Exception("Contact with that name and address already exists.");
-                }
-
                 await m_unitOfWork.CommitAsync();
+
+                // send live updates
+                await m_liveUpdateService.ContactUpdated(p_toUpdate);
 
                 return p_toUpdate;
             }
             throw new Exception("Contact cannot be updated, because it does not exist.");
         }
 
-        public async void Delete(int p_id)
+
+        public async Task Delete(int p_id)
         {
             var contact = await m_unitOfWork.Contacts.GetByIdAsync(p_id);
 
             if(contact == null)
                 throw new Exception("Contact does not exist!");
 
+            if(contact.TelephoneNumbers != null && contact.TelephoneNumbers.Count() > 0)
+                m_unitOfWork.TelephoneNumbers.RemoveRange(contact.TelephoneNumbers);
+
+            var addressUsers = m_unitOfWork.Contacts.Find(x => x.Address.Id == contact.Address.Id);
+
+            if(addressUsers.Count() == 1)
+                m_unitOfWork.Addresses.Remove(contact.Address);
+            
             m_unitOfWork.Contacts.Remove(contact);
             await m_unitOfWork.CommitAsync();
+
+            // live updates
+            await m_liveUpdateService.ContactDeleted(p_id);
         }
 
         public async Task<Contact> UpdateAddress(Contact p_toUpdate)
