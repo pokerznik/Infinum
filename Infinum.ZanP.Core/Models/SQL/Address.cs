@@ -27,5 +27,18 @@ namespace Infinum.ZanP.Core.Models.SQL
             return Street + " " + HouseNumber + ", " + ZIP + " " + City + " (" + Country + ")";
         }
 
+        public override bool Equals(object? obj)
+        {
+            Address compared = obj as Address;
+
+            if(compared == null)
+                return false;
+            
+            if((Country == null) || (compared.Country == null))
+                return false;
+
+            return ((compared.City == City) && (compared.ZIP == ZIP) && (compared.Street == Street) && (compared.HouseNumber == HouseNumber)
+            && (compared.Country.Id == Country.Id));
+        }
     }
 }

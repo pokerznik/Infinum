@@ -80,10 +80,14 @@ namespace Infinum.ZanP.Infrastructure.Services
 
             if(contact != null)
             {
+                bool hasNameChanged = !(contact.Name == p_toUpdate.Name);
+
                 contact.Name = p_toUpdate.Name;
                 contact.DateOfBirth = p_toUpdate.DateOfBirth;
 
                 Address originalAddress = await m_unitOfWork.Addresses.GetByIdAsync(contact.Address.Id);
+                bool hasAddressChanged = !(originalAddress.Equals(p_toUpdate.Address));
+
                 originalAddress.ZIP = p_toUpdate.Address.ZIP;
                 originalAddress.City = p_toUpdate.Address.City;
                 originalAddress.HouseNumber = p_toUpdate.Address.HouseNumber;
@@ -100,6 +104,13 @@ namespace Infinum.ZanP.Infrastructure.Services
                 originalAddress.Country = updatedCountry;
                 contact.Address = originalAddress;
 
+                // we should ensure address and name uniqueness, so if name or address is changed, we should
+                // chech if the contact doesn't already exist.
+                if(hasNameChanged || hasAddressChanged)
+                {
+                    if(ContactExists(contact))
+                        throw new Exception("Contact with that name and address already exists.");
+                }
 
                 await m_unitOfWork.CommitAsync();
 
