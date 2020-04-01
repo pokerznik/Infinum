@@ -82,6 +82,25 @@ namespace Infinum.ZanP.Infrastructure.Services
             {
                 contact.Name = p_toUpdate.Name;
                 contact.DateOfBirth = p_toUpdate.DateOfBirth;
+
+                Address originalAddress = await m_unitOfWork.Addresses.GetByIdAsync(contact.Address.Id);
+                originalAddress.ZIP = p_toUpdate.Address.ZIP;
+                originalAddress.City = p_toUpdate.Address.City;
+                originalAddress.HouseNumber = p_toUpdate.Address.HouseNumber;
+                originalAddress.Street = p_toUpdate.Address.Street;
+                
+                Country updatedCountry = await m_unitOfWork.Countries.GetByIdAsync(p_toUpdate.Address.Country.Id);
+
+                var originalNumbers = contact.TelephoneNumbers;
+                var updatedNumbers = p_toUpdate.TelephoneNumbers;
+
+                m_unitOfWork.TelephoneNumbers.RemoveRange(originalNumbers);
+                
+                contact.TelephoneNumbers = updatedNumbers;
+                originalAddress.Country = updatedCountry;
+                contact.Address = originalAddress;
+
+
                 await m_unitOfWork.CommitAsync();
 
                 return p_toUpdate;
